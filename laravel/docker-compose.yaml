@@ -21,8 +21,9 @@ services:
             - redis
 
     nginx: 
-        build: .docker/nginx
+        build: .docker/nginx/.
         container_name: nginx
+        entrypoint: dockerize -template /etc/nginx/conf.d/nginx.conf:/etc/nginx/conf.d/nginx.conf nginx -g 'daemon off;'
         restart: always
         #allow intern container operations with exec -it
         tty: true
@@ -30,6 +31,9 @@ services:
             - "8001:80"
         volumes:
             - .:/var/www
+        environment: 
+            - NG_SERVER=app
+            - NG_PORT=9000
         networks: 
             - app-network
         depends_on: 
